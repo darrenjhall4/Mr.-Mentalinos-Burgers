@@ -1,0 +1,41 @@
+<h1>Welcome to Mr. Mentalino's!</h1>
+
+<h2>How's Your Burger?</h2>
+
+<div id="howsYourBurgerDiv">
+  <img src="/assets/images/howsYourBurger.jpg" width="620" height="400">
+</div>
+
+
+<ul>
+  {{#each burgers}}
+    {{#unless devoured}}
+      {{> burgers/burger-block devoured=true}} 
+    {{/unless}}
+  {{/each}}
+</ul>
+
+
+<ul>
+  {{#each cats}}
+    {{#if sleepy}}
+      {{> cats/cat-block sleep=false}}
+    {{/if}}
+  {{/each}}
+</ul>
+
+<form class="create-form">
+
+  <div class="form-group">
+    <label for="ca">What kind of burga would you like?</label>
+    <input type="text" id="ca" name="name">
+  </div>
+
+  <div class="form-group">
+    <label for="sleep">Devoured?</label><br>
+    <input type="radio" name="devoured" value="0" checked>Not devoured yet<br>
+    <input type="radio" name="devoured" value="1"> DEVOURED
+  </div>
+
+  <button type="submit" class="change-devoured">Add Burger</button>
+</form>

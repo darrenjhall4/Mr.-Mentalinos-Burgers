@@ -1,10 +1,13 @@
 // Requiring necessary npm packages
 var express = require("express");
-var db = require("./models");
+// var db = require("./models");
 var exphbs = require("express-handlebars");
 var PORT = process.env.PORT || 3000;
 var app = express();
 require("dotenv").config();
+
+//ORM CODE ONLY
+var orm = require("./config/orm.js")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -19,13 +22,14 @@ var routes = require("./controllers/burgersController.js");
 app.use(routes);
 
 // Syncs database and logs a message to user upon success
-db.sequelize.sync().then(function() {
+// db.sequelize.sync().then(function() {
   app.listen(PORT, function() {
     // Log (server-side) when our server has started
     console.log("Server listening on: http://localhost:" + PORT);
   });
-});
+// });
 
+console.log("hello???");
 
 
 // var bodyParser = require("body-parser");//vid only

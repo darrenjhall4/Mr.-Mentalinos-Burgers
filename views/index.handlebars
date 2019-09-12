@@ -1,41 +1,46 @@
 <h1>Welcome to Mr. Mentalino's!</h1>
 
-<h2>How's Your Burger?</h2>
-
 <div id="howsYourBurgerDiv">
   <img src="/assets/images/howsYourBurger.jpg" width="620" height="400">
 </div>
 
+<h2>Pick one of our fine burgers!</h2>
 
 <ul>
   {{#each burgers}}
-    {{#unless devoured}}
-      {{> burgers/burger-block devoured=true}} 
-    {{/unless}}
-  {{/each}}
-</ul>
+  {{#if devoured}}
+  {{#else}}
+  <form class="devour-form" action="/devour">
+    <div class="form-group">
+      <label for="burger_input">{{burger_name}}&nbsp;</label>
+      <input type="submit" id="devoured" name="devoured_id" value={{id}}>
+    </div>
+  </form>
 
-
-<ul>
-  {{#each cats}}
-    {{#if sleepy}}
-      {{> cats/cat-block sleep=false}}
     {{/if}}
   {{/each}}
 </ul>
 
+<h2>Burgers Already Eaten</h2>
+
+<ul>
+  {{#each burgers}}
+  {{#if devoured}}
+  {{burger_name}}&nbsp;({{id}})
+  <br>
+  {{/if}}
+  {{/each}}
+
+</ul>
+
+<h2>Create Your Own Monster</h2>
 <form class="create-form">
 
-  <div class="form-group">
-    <label for="ca">What kind of burga would you like?</label>
-    <input type="text" id="ca" name="name">
-  </div>
+ <form class="create-form" action="/add">
 
   <div class="form-group">
-    <label for="sleep">Devoured?</label><br>
-    <input type="radio" name="devoured" value="0" checked>Not devoured yet<br>
-    <input type="radio" name="devoured" value="1"> DEVOURED
+    <label for="burger_input">Name Your Masterpiece:</label>
+    <input type="text" id="burger_name" name="burger_input">
   </div>
-
-  <button type="submit" class="change-devoured">Add Burger</button>
+  <button type="submit">Add Burger</button>
 </form>

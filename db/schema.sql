@@ -9,8 +9,3 @@ CREATE TABLE burgers
 	devoured BOOLEAN NOT NULL,
 	PRIMARY KEY (id)
 );
-
-
-INSERT INTO burgers (burger_name, devoured) VALUES ("test1Burger", FALSE), ("2ndTestBurger", FALSE), ("ClassicThirdTest", FALSE);
-
-select * from burgers;

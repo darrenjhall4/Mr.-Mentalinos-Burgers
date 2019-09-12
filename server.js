@@ -1,43 +1,82 @@
-// Requiring necessary npm packages
-var express = require("express");
-// var db = require("./models");
-var exphbs = require("express-handlebars");
-var PORT = process.env.PORT || 3000;
-var app = express();
-require("dotenv").config();
+const express = require('express');
+const db = require('./models');
+const bodyParser = require('body-parser');
+const querystring = require('querystring');
 
-//ORM CODE ONLY
-var orm = require("./config/orm.js")
+function main() {
+    console.log('>>> main');
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static('public'));
+    var PORT = process.env.PORT || 3000;
+    var app = express();
+    app.use(express.static('public'));
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+    var exphbs = require('express-handlebars');
+    app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+    app.set('view engine', 'handlebars');
+    app.use(bodyParser.json()); // support json encoded bodies
+    app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// Set Handlebars.
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+    app.get('/', function(req, res) {
+        db.burgers.findAll({}).then(function(burgers) {
+            res.render('index', { burgers: burgers });
+        });
+    });
 
-// Import routes and give the server access to them.
-var routes = require("./controllers/burgersController.js");
-app.use(routes);
+    app.get('/add', function(req, res) {
+        console.log(req.query);
+        var newBurger = { burger_name: req.query.burger_input, devoured: false };
+        db.burgers.create(newBurger).then(function(burgers) {
+            db.burgers.findAll({}).then(function(burgers) {
+                res.render('index', { burgers: burgers });
+            });
+        });
+    });
 
-// Syncs database and logs a message to user upon success
-// db.sequelize.sync().then(function() {
-  app.listen(PORT, function() {
-    // Log (server-side) when our server has started
-    console.log("Server listening on: http://localhost:" + PORT);
-  });
-// });
+    app.get('/devour', function(req, res) {
+        console.log(req.query);
+        var newBurger = { devoured: true, id: req.query.devoured_id };
+        db.burgers.update(newBurger, { where: { id: req.query.devoured_id } }).then(function(burgers) {
+            db.burgers.findAll({}).then(function(burgers) {
+                res.render('index', { burgers: burgers });
+            });
+        });
+    });
 
-console.log("hello???");
+    db.sequelize.sync({ force: false }).then(function() {
+        app.listen(PORT, function() {
+            console.log('App listening on PORT ' + PORT);
+        });
+    });
+    console.log('<<< main');
+}
 
+main();
 
-// var bodyParser = require("body-parser");//vid only
-// var methodOverride = require("method-override");//vid only
+function orm_test() {
+    orm.connect(function(connection) {
+        orm.insertOne(connection, { burger_name: 'Gregs Special', devoured: false }, function(res) {
+            orm.selectAll(connection, function(res) {
+                let burger = res[0];
+                (burger.burger_name = 'Devoured Burger'), (burger.devoured = true);
+                orm.updateOne(connection, burger, function(res) {
+                    console.log(res);
+                });
+            });
+        });
+    });
+}
 
-/*FOR USER SESSIONS/CREDENTIALS
-We need to use sessions to keep track of our user's login status
-app.use(session({ secret: "keyboard cat", resave: true, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-*/
+function burger_test() {
+    burger.connect(function(connection) {
+        burger.addOneBurger(connection, { burger_name: 'Gregs Special', devoured: false }, function(res) {
+            burger.getAllBurgers(connection, function(res) {
+                let thisBurger = res[0];
+                (thisBurger.burger_name = 'Devoured Burger'), (thisBurger.devoured = true);
+                burger.updateOneBurger(connection, thisBurger, function(res) {
+                    console.log(res);
+                });
+            });
+        });
+    });
+}

@@ -1,9 +1,9 @@
-{
+module.exports = {
   "development": {
     "username": "root",
     "password": "",
     "database": "burgers_db",
-    "host": "public-scratch.cvwwn9esnrpn.us-east-1.rds.amazonaws.com",
+    "host": "localhost",
     "port": 3306,
     "dialect": "mysql"
   },

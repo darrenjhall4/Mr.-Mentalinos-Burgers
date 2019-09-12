@@ -9,5 +9,12 @@ module.exports = function(sequelize, DataTypes) {
           allowNull: false
       }
   });
+//   Burger.associate = function (models) {
+//     Burger.belongsTo(models.Customer, {
+//         foreignKey: {
+//             allowNull: true
+//         }
+//     });
+// }
   return Burger;
 };
